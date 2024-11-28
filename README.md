@@ -1,6 +1,6 @@
 # Bibliotecas Utilizadas
 from customtkinter import CTkButton, set_appearance_mode, CTkFrame, CTkLabel, CTkEntry, CTkTabview, CTk, \
-    set_default_color_theme, CTkCheckBox
+    set_default_color_theme, CTkCheckBox, CTkOptionMenu
 import csv # Pensar em otimização, utilizando SQLite
 import datetime
 import matplotlib.pyplot as plt
@@ -309,26 +309,26 @@ def exibir_gastos_mes_frame(frame):
     CTkButton(frame, text="Calcular", command=calcular_gastos).pack(pady=5)
 
 # Função para alternar configurações visuais
-def configurar_visual(frame):
-    frame_configuracoes = CTkLabel(frame)
+def criar_aba_configuracoes(frame):
+    frame_configuracoes = CTkFrame(frame)
     frame_configuracoes.pack(pady=5, fill="x")
+
+    # Criar área para personalizar o visual
     CTkLabel(frame_configuracoes, text="Personalize o Visual", font=("Arial", 16)).pack(pady=10)
 
-    def alterar_tema(novo_tema):
-        set_default_color_theme(novo_tema)
+    # Criar barra de escolha de temas
+    # Dúvida: O tema não está atualizando automaticamente
+    CTkLabel(frame_configuracoes, text="Escolha um tema:")
+    menu_tema = CTkOptionMenu(frame_configuracoes, values=["blue", "green", "dark-blue"],
+                              command=lambda value: set_default_color_theme(value))
+    menu_tema.pack(pady=10)
 
-    def alterar_modo(novo_modo):
-        set_appearance_mode(novo_modo)
+    # criar barra de escolha de modos
+    CTkLabel(frame_configuracoes, text="escolha um modo")
+    menu_modo = CTkOptionMenu(frame_configuracoes, values=["light", "dark", "system"],
+                              command=lambda value: set_appearance_mode(value))
+    menu_modo.pack(pady=10)
 
-    CTkLabel(frame_configuracoes, text="Escolha o Tema:", font=("Arial", 14)).pack(pady=5)
-    tema_options = ["blue", "dark-blue", "green"]
-    for tema in tema_options:
-        CTkButton(frame_configuracoes, text=tema.capitalize(), command=lambda t=tema: alterar_tema(t)).pack(pady=5)
-
-    CTkLabel(frame_configuracoes, text="Escolha o Modo:", font=("Arial", 14)).pack(pady=10)
-    modo_options = ["light", "dark", "system"]
-    for modo in modo_options:
-        CTkButton(frame_configuracoes, text=modo.capitalize(), command=lambda m=modo: alterar_modo(m)).pack(pady=5)
 
 def tela_cadastro(frame):
     for widget in frame.winfo_children():
@@ -415,6 +415,7 @@ def tela_login():
             adicionar_gasto_frame(aba_adicionar_gasto)
             exibir_gastos_mes_frame(aba_exibir_gastos)
             criar_aba_metas(aba_metas)
+            criar_aba_configuracoes(aba_configuracoes)
 
         else:
             messagebox.showerror("Erro", "Login ou senha incorretos.")
@@ -488,7 +489,7 @@ if __name__ == "__main__":
     aba_adicionar_gasto = tabview.add("Adicionar Gasto")
     aba_exibir_gastos = tabview.add("Exibir Relatório")
     aba_metas = tabview.add("Metas")
-    configurar_visual(tabview)
+    aba_configuracoes = tabview.add("Configurações")
 
     tela_login()  # Chama a tela de login primeiro
 
